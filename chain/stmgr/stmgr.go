@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/filecoin-project/lotus/chain/actors/builtin"
 	"github.com/filecoin-project/lotus/chain/actors/builtin/verifreg"
 
 	_init "github.com/filecoin-project/lotus/chain/actors/builtin/init"
@@ -32,6 +31,7 @@ import (
 	"github.com/filecoin-project/lotus/build"
 	"github.com/filecoin-project/lotus/chain/actors"
 	"github.com/filecoin-project/lotus/chain/actors/adt"
+	"github.com/filecoin-project/lotus/chain/actors/builtin"
 	"github.com/filecoin-project/lotus/chain/actors/builtin/market"
 	"github.com/filecoin-project/lotus/chain/actors/builtin/multisig"
 	"github.com/filecoin-project/lotus/chain/actors/builtin/paych"
@@ -48,6 +48,8 @@ const LookbackNoLimit = abi.ChainEpoch(-1)
 var log = logging.Logger("statemgr")
 
 type StateManagerAPI interface {
+	Call(ctx context.Context, msg *types.Message, ts *types.TipSet) (*api.InvocResult, error)
+	GetPaychState(ctx context.Context, addr address.Address, ts *types.TipSet) (*types.Actor, paych.State, error)
 	LoadActorTsk(ctx context.Context, addr address.Address, tsk types.TipSetKey) (*types.Actor, error)
 	LookupID(ctx context.Context, addr address.Address, ts *types.TipSet) (address.Address, error)
 	ResolveToKeyAddress(ctx context.Context, addr address.Address, ts *types.TipSet) (address.Address, error)
